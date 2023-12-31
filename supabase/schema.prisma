@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  deletedAt  DateTime?
+
+  billboards Billboard[]
+}
+
+model Billboard {
+  id        String   @id @default(uuid())
+  name      String?
+  address   String?
+  postCode  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  deletedAt  DateTime?
+  
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
