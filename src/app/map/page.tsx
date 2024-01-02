@@ -1,9 +1,9 @@
 import { FC } from "react";
-import GoogleMap from "./GoogleMap";
-// load states from db here
+import GoogleMap from "./MapBox";
+import MapBox from "./MapBox";
 
 const Page: FC = () => (
-  <GoogleMap />
+  <MapBox />
 );
 
 export default Page;

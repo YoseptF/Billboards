@@ -11,25 +11,54 @@ datasource db {
 }
 
 model Customer {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   name      String?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   updatedAt DateTime?
-  deletedAt  DateTime?
+  deletedAt DateTime?
 
   billboards Billboard[]
 }
 
 model Billboard {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String?
   address   String?
   postCode  String?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   updatedAt DateTime?
-  deletedAt  DateTime?
+  deletedAt DateTime?
+
+  customerId       String?
+  customer         Customer?          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  BillboardInPlace BillboardInPlace[]
+}
+
+model Place {
+  id               String             @id @default(uuid())
+  name             String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime?
+  deletedAt        DateTime?
+  BillboardInPlace BillboardInPlace[]
   
-  customerId String?
-  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  // viewport
+  north           Float?
+  east            Float?
+  south           Float?
+  west            Float?
+}
+
+model BillboardInPlace {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+
+  billboardId String?
+  billboard   Billboard? @relation(fields: [billboardId], references: [id], onDelete: Cascade)
+
+  placeId String?
+  place   Place?  @relation(fields: [placeId], references: [id], onDelete: Cascade)
 }

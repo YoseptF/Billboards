@@ -12,6 +12,7 @@ const snaplet = new SnapletClient({
 // Clears all existing data in the database, but keep the structure
 await snaplet.$resetDatabase()
 
+// auth users
 await snaplet.users([{
   instance_id: "00000000-0000-0000-0000-000000000000",
   id: "0a830161-2854-4b36-84a3-94ccf9184257",
@@ -29,7 +30,7 @@ await snaplet.users([{
   email_change_token_new: "",
   email_change_sent_at: null,
   last_sign_in_at: null,
-  raw_app_meta_data: {"provider":"email","providers":["email"]},
+  raw_app_meta_data: { "provider": "email", "providers": ["email"] },
   raw_user_meta_data: {},
   is_super_admin: null,
   created_at: "2023-12-31 00:42:35.093882+00",
@@ -47,21 +48,164 @@ await snaplet.users([{
   deleted_at: null,
   phone_change_sent_at: null,
 }])
+
+const emptyNode = {
+  deletedAt: null,
+  updatedAt: null,
+}
+
+const emptyState = {
+  east: null,
+  north: null,
+  south: null,
+  west: null,
+  ...emptyNode,
+}
+
+const statesAndIds = [
+  {
+    name: "BAJA_CALIFORNIA_NORTE",
+    id: "ChIJ0913qAxw14ARjt4YA5_9pPw",
+  },
+  {
+    name: "BAJA_CALIFORNIA_SUR",
+    id: "ChIJyR6itTnTr4YRGFmnqTqz33E",
+  },
+  {
+    name: "CAMPECHE",
+    id: "ChIJFeLHS0LD6IURw_yqe4z3i-Y",
+  },
+  {
+    name: "CHIAPAS",
+    id: "ChIJZ85Xl7REjYURFdYZRoIzAM8",
+  },
+  {
+    name: "CHIHUAHUA",
+    id: "ChIJCaSRhS91loYRB36nQFPig5s",
+  },
+  {
+    name: "COAHUILA",
+    id: "ChIJKR6Opr1yiIYROXrNFNeaAGQ",
+  },
+  {
+    name: "COLIMA",
+    id: "ChIJ6yVw_g0yJYQRCmlXH5dAHiw",
+  },
+  {
+    name: "DURANGO",
+    id: "ChIJSUVzr8GpkIYRsgjjq0HifSk",
+  },
+  {
+    name: "CUERNAVACA",
+    id: "ChIJR_72Ja7fzYURD91poSWCX5cs",
+  },
+  {
+    name: "GUANAJUATO",
+    id: "ChIJf3-bUI9bK4QRoEO-gRmmjuc",
+  },
+  {
+    name: "GUERRERO",
+    id: "ChIJPyAn81hly4UROst3QpsiNzE",
+  },
+  {
+    name: "HIDALGO",
+    id: "ChIJ5y_OIgQK0YURG3hAeb_FUoE",
+  },
+  {
+    name: "JALISCO",
+    id: "ChIJb05i1OtAH4QRU0obWqOw_qA",
+  },
+  {
+    name: "MEXICO_CITY",
+    id: "ChIJJyk1sTYAzoURW4rR6E6e_d4",
+  },
+  {
+    name: "MICHOACAN",
+    id: "ChIJt1yzHj5fKoQR1OBL8wxlxzs",
+  },
+  {
+    name: "MORELOS",
+    id: "ChIJR_72Ja7fzYURD91poSWCX5c",
+  },
+  {
+    name: "NAYARIT",
+    id: "ChIJR9s-5pyoIIQROdKUhqL1yMI",
+  },
+  {
+    name: "NUEVO_LEON",
+    id: "ChIJXbClooSVYoYRxrtsw0L0HXA",
+  },
+  {
+    name: "OAXACA",
+    id: "ChIJUVwOOk_YwIURyQvZPUMMxkQ",
+  },
+  {
+    name: "PUEBLA",
+    id: "ChIJZafA3bCMz4URrSAC1luuXOI",
+  },
+  {
+    name: "QUERETARO",
+    id: "ChIJX3BEYdFE04URu2lIpMSxRpE",
+  },
+  {
+    name: "QUINTANA_ROO",
+    id: "ChIJlSbD6vD8T48RnI1MSCrF8MQ",
+  },
+  {
+    name: "SAN_LUIS_POTOSI",
+    id: "ChIJefusBQCiKoQRXkEExEGyIOY",
+  },
+  {
+    name: "SINALOA",
+    id: "ChIJWUmnKJRTn4YR71--DXbfe5w",
+  },
+  {
+    name: "SONORA",
+    id: "ChIJD9JN52kpmIYRdOO7_Br_Vs0",
+  },
+  {
+    name: "STATE_OF_MEXICO",
+    id: "ChIJOwrrwJKJzYURV6jFn775_sI",
+  },
+  {
+    name: "TABASCO",
+    id: "ChIJT8t4j1_77YURRGuG2RHLJtQ",
+  },
+  {
+    name: "TAMAULIPAS",
+    id: "ChIJWSQe265TeYYRJRnoNVqfhTM",
+  },
+  {
+    name: "TLAXCALA",
+    id: "ChIJE2EAHD_Zz4UR4L181Friujg",
+  },
+  {
+    name: "VERACRUZ",
+    id: "ChIJbVJUr9BVw4URs7kQZwp_dy0",
+  },
+  {
+    name: "YUCATAN",
+    id: "ChIJ7QTWqvgPVI8RCj0IMXUhzMw",
+  },
+  {
+    name: "ZACATECAS",
+    id: "ChIJb_7JfqDRgYYRmG0lXv0tHxw",
+  }
+].map(x => ({ ...x, ...emptyState }))
+
 await snaplet.$pipe([
   snaplet.$merge([
     snaplet.Customer([{
       email: "yosept.flores@mail.com",
       name: "Joseph Flores",
-      deletedAt: null,
-      updatedAt: null,
+      ...emptyNode,
     }]),
     snaplet.Customer(x => x(3, () => {
       const name = faker.person.fullName()
       return {
         email: faker.internet.email({ firstName: name.split(' ')[0], lastName: name.split(' ')[1] }),
         name,
-        deletedAt: null,
-        updatedAt: null,
+        ...emptyNode,
       }
     }
     )),
@@ -69,7 +213,8 @@ await snaplet.$pipe([
   snaplet.Billboard(x => x(15, () => ({
     address: faker.location.streetAddress(),
     postCode: faker.location.zipCode(),
-    deletedAt: null,
-    updatedAt: null,
+    ...emptyNode, 
   })), { autoConnect: true }),
+  snaplet.Place(statesAndIds),
+  snaplet.BillboardInPlace(x => x(15, () => emptyNode), { autoConnect: true }),
 ]);

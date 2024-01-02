@@ -19,6 +19,14 @@ interface Table_public_billboard {
   customerId: string | null;
   deletedAt: string | null;
 }
+interface Table_public_billboard_in_place {
+  id: string;
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  billboardId: string | null;
+  placeId: string | null;
+}
 interface Table_public_customer {
   id: string;
   email: string;
@@ -26,6 +34,17 @@ interface Table_public_customer {
   createdAt: string;
   updatedAt: string | null;
   deletedAt: string | null;
+}
+interface Table_public_place {
+  id: string;
+  name: string | null;
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  east: number | null;
+  north: number | null;
+  south: number | null;
+  west: number | null;
 }
 interface Table_net_http_response {
   id: number | null;
@@ -318,7 +337,9 @@ interface Schema_pgsodium_masks {
 }
 interface Schema_public {
   Billboard: Table_public_billboard;
+  BillboardInPlace: Table_public_billboard_in_place;
   Customer: Table_public_customer;
+  Place: Table_public_place;
 }
 interface Schema_realtime {
 
@@ -367,6 +388,15 @@ interface Tables_relationships {
        Billboard_customerId_fkey: "public.Customer";
     };
     children: {
+       BillboardInPlace_billboardId_fkey: "public.BillboardInPlace";
+    };
+  };
+  "public.BillboardInPlace": {
+    parent: {
+       BillboardInPlace_billboardId_fkey: "public.Billboard";
+       BillboardInPlace_placeId_fkey: "public.Place";
+    };
+    children: {
 
     };
   };
@@ -376,6 +406,14 @@ interface Tables_relationships {
     };
     children: {
        Billboard_customerId_fkey: "public.Billboard";
+    };
+  };
+  "public.Place": {
+    parent: {
+
+    };
+    children: {
+       BillboardInPlace_placeId_fkey: "public.BillboardInPlace";
     };
   };
   "storage.buckets": {

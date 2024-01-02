@@ -3,14 +3,23 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   schema: "http://localhost:54321/graphql/v1", // Using the local endpoint, update if needed
-  documents: "src/**/*.tsx",
+  documents: "src/**/*.graphql.ts",
   overwrite: true,
   ignoreNoDocuments: true,
   generates: {
-    "src/gql/": {
+    "src/graphql/generated/": {
       preset: "client",
       documentTransforms: [addTypenameSelectionDocumentTransform],
-      plugins: [],
+      plugins: [
+        {
+          "add": {
+            "content": "// @ts-nocheck"
+          }
+        }
+      ],
+      presetConfig: {
+        fragmentMasking: false
+      },
       config: {
         scalars: {
           UUID: "string",
@@ -24,9 +33,6 @@ const config: CodegenConfig = {
         },
       },
     },
-  },
-  hooks: {
-    afterAllFileWrite: ["npm run prettier"], // optional
   },
 };
 

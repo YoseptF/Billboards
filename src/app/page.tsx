@@ -1,15 +1,18 @@
-"use client";
-
-import { ApolloProvider } from "@apollo/client";
-import client from "../../graphql/client";
 import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import MexicoMap from "./StateSelector/MexicoMap";
 import StateSelector from "./StateSelector";
+import supabase from "@/graphql/supabase";
 import Transition from "./Transition";
 
-const Home: FC = () => (
-  <ApolloProvider client={client}>
+const Home: FC = async () => {
+  // select the first billboard
+  const response = await supabase.from("Billboard").select("*").limit(1);
+
+  console.info("response", response);
+
+  return (
     <Transition>
       <main className="flex flex-col items-center">
         <nav className='w-full bg-red-50'>
@@ -31,7 +34,7 @@ const Home: FC = () => (
         <StateSelector states={["state_of_mexico", "puebla", "coahuila", "queretaro", "nuevo_leon", "chihuahua"]} />
       </main>
     </Transition>
-  </ApolloProvider>
-);
+  );
+};
 
 export default Home;

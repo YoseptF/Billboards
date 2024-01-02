@@ -26,6 +26,20 @@ type Override = {
       customerId?: string;
       deletedAt?: string;
       Customer?: string;
+      BillboardInPlace?: string;
+    };
+  }
+  BillboardInPlace?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      createdAt?: string;
+      updatedAt?: string;
+      deletedAt?: string;
+      billboardId?: string;
+      placeId?: string;
+      Billboard?: string;
+      Place?: string;
     };
   }
   Customer?: {
@@ -38,6 +52,21 @@ type Override = {
       updatedAt?: string;
       deletedAt?: string;
       Billboard?: string;
+    };
+  }
+  Place?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      name?: string;
+      createdAt?: string;
+      updatedAt?: string;
+      deletedAt?: string;
+      east?: string;
+      north?: string;
+      south?: string;
+      west?: string;
+      BillboardInPlace?: string;
     };
   }
   _http_response?: {
@@ -410,9 +439,17 @@ interface BlueprintDateField {
 export interface Blueprint {
   Billboard?: {
     Customer?: BlueprintRelationField;
+    BillboardInPlace?: BlueprintRelationField;
+  }
+  BillboardInPlace?: {
+    Billboard?: BlueprintRelationField;
+    Place?: BlueprintRelationField;
   }
   Customer?: {
     Billboard?: BlueprintRelationField;
+  }
+  Place?: {
+    BillboardInPlace?: BlueprintRelationField;
   }
   _http_response?: {
     headers?: BlueprintJsonField;

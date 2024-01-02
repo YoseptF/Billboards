@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { FC, ReactNode } from "react";
 
+import ApolloProvider from "./providers/ApolloProvider";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 
@@ -17,9 +18,11 @@ interface RootLayoutProps {
 }
 
 const RootLayout: FC<RootLayoutProps> = ({ children }) => (
-  <html lang="en">
-    <body className={inter.className}>{children}</body>
-  </html>
+  <ApolloProvider>
+    <html lang="en">
+      <body className={inter.className}>{children}</body>
+    </html>
+  </ApolloProvider>
 );
 
 export default RootLayout;

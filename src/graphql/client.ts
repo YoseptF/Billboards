@@ -5,7 +5,6 @@ import {
   InMemoryCache
 } from "@apollo/client";
 
-import { relayStylePagination } from "@apollo/client/utilities";
 import { setContext } from "@apollo/client/link/context";
 import supabase from "./supabase";
 
@@ -17,11 +16,9 @@ const cache = new InMemoryCache({
 
     return defaultDataIdFromObject(responseObject);
   },
-  possibleTypes: { Node: ["Todos"] }, // optional, but useful to specify supertype-subtype relationships
   typePolicies: {
     Query: {
       fields: {
-        todosCollection: relayStylePagination(), // example of paginating a collection
         node: {
           read(_, { args, toReference }) {
             const ref = toReference({
@@ -42,6 +39,8 @@ const httpLink = createHttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   const token = (await supabase.auth.getSession()).data.session?.access_token;
+
+  console.info("token", token);
 
   return {
     headers: {
