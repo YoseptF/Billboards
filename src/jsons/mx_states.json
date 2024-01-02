@@ -6,7 +6,7 @@
       "properties": {
         "state_code": "09",
         "state_name": "mexico_city",
-        "id": 1
+        "id": "580bde29-2a5d-4799-a00c-863e4415e596"
       },
       "geometry": {
         "type": "Polygon",
@@ -293,7 +293,7 @@
       "properties": {
         "state_code": "12",
         "state_name": "guerrero",
-        "id": 2
+        "id": "2591e671-52a1-46bd-8015-68e88a597d57"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -2334,7 +2334,7 @@
       "properties": {
         "state_code": "15",
         "state_name": "state_of_mexico",
-        "id": 3
+        "id": "92ae6567-a3f1-4ef0-8b3b-a3243bcb3f04"
       },
       "geometry": {
         "type": "Polygon",
@@ -4141,7 +4141,7 @@
       "properties": {
         "state_code": "17",
         "state_name": "morelos",
-        "id": 4
+        "id": "f5ce79d5-b6d3-4ed2-be2f-f7724da26d6a"
       },
       "geometry": {
         "type": "Polygon",
@@ -4604,7 +4604,7 @@
       "properties": {
         "state_code": "25",
         "state_name": "sinaloa",
-        "id": 5
+        "id": "f544e206-74ce-4f5b-bb78-59ae25bd36e8"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -6465,7 +6465,7 @@
       "properties": {
         "state_code": "02",
         "state_name": "baja_california_norte",
-        "id": 6
+        "id": "cf69ba82-d980-4ea1-ac79-470f5845aa08"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -9538,7 +9538,7 @@
       "properties": {
         "state_code": "26",
         "state_name": "sonora",
-        "id": 7
+        "id": "e577b3a0-2974-49cc-b10c-c79c3be71c18"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -12563,7 +12563,7 @@
       "properties": {
         "state_code": "03",
         "state_name": "baja_california_sur",
-        "id": 8
+        "id": "80d7b530-b7c1-432b-ad5b-95d5f2a94fcd"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -15660,7 +15660,7 @@
       "properties": {
         "state_code": "32",
         "state_name": "zacatecas",
-        "id": 9
+        "id": "9c95e731-9163-4e77-b55a-78c557cb98d7"
       },
       "geometry": {
         "type": "Polygon",
@@ -19291,7 +19291,7 @@
       "properties": {
         "state_code": "10",
         "state_name": "durango",
-        "id": 10
+        "id": "a3a19550-64b0-4504-b528-5893f92e5864"
       },
       "geometry": {
         "type": "Polygon",
@@ -21746,7 +21746,7 @@
       "properties": {
         "state_code": "08",
         "state_name": "chihuahua",
-        "id": 11
+        "id": "8552d7fe-546d-4e2b-bec8-eebda0744b2b"
       },
       "geometry": {
         "type": "Polygon",
@@ -24721,7 +24721,7 @@
       "properties": {
         "state_code": "06",
         "state_name": "colima",
-        "id": 12
+        "id": "ad29c4d5-c427-4019-a453-82159fa81a60"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -25538,7 +25538,7 @@
       "properties": {
         "state_code": "18",
         "state_name": "nayarit",
-        "id": 13
+        "id": "897a39af-57c9-409f-a705-b34f2f86430d"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -27399,7 +27399,7 @@
       "properties": {
         "state_code": "16",
         "state_name": "michoacan",
-        "id": 14
+        "id": "bf0ab965-6a7b-47fb-a305-1ae78f82df40"
       },
       "geometry": {
         "type": "Polygon",
@@ -30054,7 +30054,7 @@
       "properties": {
         "state_code": "14",
         "state_name": "jalisco",
-        "id": 15
+        "id": "b91ceed3-843b-4e66-af91-cd47e0aa7030"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -35287,7 +35287,7 @@
       "properties": {
         "state_code": "07",
         "state_name": "chiapas",
-        "id": 16
+        "id": "daf9627d-a387-473c-8653-ab491900d468"
       },
       "geometry": {
         "type": "Polygon",
@@ -37054,7 +37054,7 @@
       "properties": {
         "state_code": "27",
         "state_name": "tabasco",
-        "id": 17
+        "id": "1e8b6648-b996-4abc-aa27-c7b6a38c5a99"
       },
       "geometry": {
         "type": "Polygon",
@@ -38697,7 +38697,7 @@
       "properties": {
         "state_code": "20",
         "state_name": "oaxaca",
-        "id": 18
+        "id": "a13cd0ac-7e37-469e-9570-aea8842f3fb2"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -40918,7 +40918,7 @@
       "properties": {
         "state_code": "11",
         "state_name": "guanajuato",
-        "id": 19
+        "id": "62965877-0e5a-4e2a-aa1d-c724280c29d2"
       },
       "geometry": {
         "type": "Polygon",
@@ -42777,7 +42777,7 @@
       "properties": {
         "state_code": "01",
         "state_name": "aguascalientes",
-        "id": 20
+        "id": "b67280e3-63bb-492e-a7a0-0117456d578b"
       },
       "geometry": {
         "type": "Polygon",
@@ -43256,7 +43256,7 @@
       "properties": {
         "state_code": "22",
         "state_name": "queretaro",
-        "id": 21
+        "id": "c8c8aec5-4d22-4c72-9739-07f3050c7922"
       },
       "geometry": {
         "type": "Polygon",
@@ -44371,7 +44371,7 @@
       "properties": {
         "state_code": "24",
         "state_name": "san_luis_potosi",
-        "id": 22
+        "id": "3059a1ce-8268-49dc-b1d2-fce6f584f697"
       },
       "geometry": {
         "type": "Polygon",
@@ -46906,7 +46906,7 @@
       "properties": {
         "state_code": "29",
         "state_name": "tlaxcala",
-        "id": 23
+        "id": "bd235bb4-0d1a-48c4-b255-6ab0fe44d7d6"
       },
       "geometry": {
         "type": "Polygon",
@@ -47473,7 +47473,7 @@
       "properties": {
         "state_code": "21",
         "state_name": "puebla",
-        "id": 24
+        "id": "db58e94d-6605-43af-867a-13fff9f70fd0"
       },
       "geometry": {
         "type": "Polygon",
@@ -50336,7 +50336,7 @@
       "properties": {
         "state_code": "13",
         "state_name": "hidalgo",
-        "id": 25
+        "id": "17f99ef5-e022-43fb-987f-a4058c7e82d5"
       },
       "geometry": {
         "type": "Polygon",
@@ -52383,7 +52383,7 @@
       "properties": {
         "state_code": "30",
         "state_name": "veracruz",
-        "id": 26
+        "id": "11a47334-c277-485c-ae77-b1657ba3274e"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -56400,7 +56400,7 @@
       "properties": {
         "state_code": "19",
         "state_name": "nuevo_leon",
-        "id": 27
+        "id": "af1f9f3b-97b6-4717-b454-0ea50b787a7d"
       },
       "geometry": {
         "type": "Polygon",
@@ -57847,7 +57847,7 @@
       "properties": {
         "state_code": "05",
         "state_name": "coahuila",
-        "id": 28
+        "id": "a976555e-b3ee-4460-a5e9-dab2f55a8ffb"
       },
       "geometry": {
         "type": "Polygon",
@@ -60162,7 +60162,7 @@
       "properties": {
         "state_code": "28",
         "state_name": "tamaulipas",
-        "id": 29
+        "id": "37375e9d-77c0-47ba-9c08-b020f32dca90"
       },
       "geometry": {
         "type": "Polygon",
@@ -62645,7 +62645,7 @@
       "properties": {
         "state_code": "31",
         "state_name": "yucatan",
-        "id": 30
+        "id": "c4a60a18-28ca-422f-8d36-8c07526a2898"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -64358,7 +64358,7 @@
       "properties": {
         "state_code": "04",
         "state_name": "campeche",
-        "id": 31
+        "id": "71092f8b-545d-4028-bd2d-3e6137245d55"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -65483,7 +65483,7 @@
       "properties": {
         "state_code": "23",
         "state_name": "quintana_roo",
-        "id": 32
+        "id": "3643397e-cda8-47de-996a-082cfcce22e1"
       },
       "geometry": {
         "type": "MultiPolygon",

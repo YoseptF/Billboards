@@ -41,6 +41,7 @@ export interface Database {
           customerId: string | null
           deletedAt: string | null
           id: string
+          mapId: string | null
           name: string | null
           postCode: string | null
           updatedAt: string | null
@@ -51,6 +52,7 @@ export interface Database {
           customerId?: string | null
           deletedAt?: string | null
           id: string
+          mapId?: string | null
           name?: string | null
           postCode?: string | null
           updatedAt?: string | null
@@ -61,6 +63,7 @@ export interface Database {
           customerId?: string | null
           deletedAt?: string | null
           id?: string
+          mapId?: string | null
           name?: string | null
           postCode?: string | null
           updatedAt?: string | null
@@ -71,6 +74,13 @@ export interface Database {
             columns: ["customerId"]
             isOneToOne: false
             referencedRelation: "Customer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Billboard_mapId_fkey"
+            columns: ["mapId"]
+            isOneToOne: false
+            referencedRelation: "Map"
             referencedColumns: ["id"]
           }
         ]
@@ -144,41 +154,67 @@ export interface Database {
         }
         Relationships: []
       }
-      Place: {
+      Map: {
         Row: {
           createdAt: string
           deletedAt: string | null
-          east: number | null
+          geoJson: Json
           id: string
           name: string | null
-          north: number | null
-          south: number | null
           updatedAt: string | null
-          west: number | null
         }
         Insert: {
           createdAt?: string
           deletedAt?: string | null
-          east?: number | null
+          geoJson: Json
           id: string
           name?: string | null
-          north?: number | null
-          south?: number | null
           updatedAt?: string | null
-          west?: number | null
         }
         Update: {
           createdAt?: string
           deletedAt?: string | null
-          east?: number | null
+          geoJson?: Json
           id?: string
           name?: string | null
-          north?: number | null
-          south?: number | null
           updatedAt?: string | null
-          west?: number | null
         }
         Relationships: []
+      }
+      Place: {
+        Row: {
+          createdAt: string
+          deletedAt: string | null
+          id: string
+          mapId: string | null
+          name: string | null
+          updatedAt: string | null
+        }
+        Insert: {
+          createdAt?: string
+          deletedAt?: string | null
+          id: string
+          mapId?: string | null
+          name?: string | null
+          updatedAt?: string | null
+        }
+        Update: {
+          createdAt?: string
+          deletedAt?: string | null
+          id?: string
+          mapId?: string | null
+          name?: string | null
+          updatedAt?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Place_mapId_fkey"
+            columns: ["mapId"]
+            isOneToOne: false
+            referencedRelation: "Map"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

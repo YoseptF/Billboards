@@ -33,21 +33,22 @@ model Billboard {
   customerId       String?
   customer         Customer?          @relation(fields: [customerId], references: [id], onDelete: Cascade)
   BillboardInPlace BillboardInPlace[]
+
+  mapId String?
+  map   Map?    @relation(fields: [mapId], references: [id], onDelete: Cascade)
 }
 
 model Place {
-  id               String             @id @default(uuid())
-  name             String?
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime?
-  deletedAt        DateTime?
+  id        String    @id @default(uuid())
+  name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+
+  mapId String?
+  map   Map?    @relation(fields: [mapId], references: [id], onDelete: Cascade)
+
   BillboardInPlace BillboardInPlace[]
-  
-  // viewport
-  north           Float?
-  east            Float?
-  south           Float?
-  west            Float?
 }
 
 model BillboardInPlace {
@@ -61,4 +62,17 @@ model BillboardInPlace {
 
   placeId String?
   place   Place?  @relation(fields: [placeId], references: [id], onDelete: Cascade)
+}
+
+model Map {
+  id        String    @id @default(uuid())
+  name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+
+  geoJson          Json
+
+  Place            Place[]
+  Billboard        Billboard[]
 }

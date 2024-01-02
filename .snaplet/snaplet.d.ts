@@ -18,6 +18,7 @@ interface Table_public_billboard {
   updatedAt: string | null;
   customerId: string | null;
   deletedAt: string | null;
+  mapId: string | null;
 }
 interface Table_public_billboard_in_place {
   id: string;
@@ -35,16 +36,21 @@ interface Table_public_customer {
   updatedAt: string | null;
   deletedAt: string | null;
 }
+interface Table_public_map {
+  id: string;
+  name: string | null;
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  geoJson: Json;
+}
 interface Table_public_place {
   id: string;
   name: string | null;
   createdAt: string;
   updatedAt: string | null;
   deletedAt: string | null;
-  east: number | null;
-  north: number | null;
-  south: number | null;
-  west: number | null;
+  mapId: string | null;
 }
 interface Table_net_http_response {
   id: number | null;
@@ -339,6 +345,7 @@ interface Schema_public {
   Billboard: Table_public_billboard;
   BillboardInPlace: Table_public_billboard_in_place;
   Customer: Table_public_customer;
+  Map: Table_public_map;
   Place: Table_public_place;
 }
 interface Schema_realtime {
@@ -386,6 +393,7 @@ interface Tables_relationships {
   "public.Billboard": {
     parent: {
        Billboard_customerId_fkey: "public.Customer";
+       Billboard_mapId_fkey: "public.Map";
     };
     children: {
        BillboardInPlace_billboardId_fkey: "public.BillboardInPlace";
@@ -408,9 +416,18 @@ interface Tables_relationships {
        Billboard_customerId_fkey: "public.Billboard";
     };
   };
-  "public.Place": {
+  "public.Map": {
     parent: {
 
+    };
+    children: {
+       Billboard_mapId_fkey: "public.Billboard";
+       Place_mapId_fkey: "public.Place";
+    };
+  };
+  "public.Place": {
+    parent: {
+       Place_mapId_fkey: "public.Map";
     };
     children: {
        BillboardInPlace_placeId_fkey: "public.BillboardInPlace";

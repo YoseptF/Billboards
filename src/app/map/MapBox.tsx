@@ -11,6 +11,8 @@ import {
 
 import { Database } from "@/graphql/database.types";
 import { FeatureCollection } from "geojson";
+import { flattenNumberArrays } from "@/utils/geoJson";
+import { getMap } from "@/utils/indexedDB";
 import mapboxgl from "mapbox-gl";
 import mexicoStates from "@/jsons/mx_states.json";
 import supabase from "@/graphql/supabase";
@@ -70,6 +72,11 @@ const MapBox: FC = () => {
 
       if (stateFromParams) {
         currentMap.on("load", async () => {
+
+          const map = await getMap("mexico_states");
+
+          console.debug("map", map);
+
           currentMap.addSource("mexicanStates", { type: "geojson", data: mexicoStates as FeatureCollection });
 
           currentMap.removeLayer("admin-1-boundary");
@@ -93,34 +100,6 @@ const MapBox: FC = () => {
           const geometry = mexicoStates.features.find((feature) => feature.properties.state_name === stateFromParams)?.geometry;
           if (!geometry) return;
           const bounds = new mapboxgl.LngLatBounds();
-
-          type multiDimensionalArray = number[] | number[][] | number[][][] | number[][][][]
-
-          type multiDimensionalArrayComplex = Exclude<multiDimensionalArray, number[]>
-
-          const isNumberArray = (initial: multiDimensionalArray): initial is [number, number] => typeof initial[0] === "number";
-
-          const isNumberArrayArray = (initial: multiDimensionalArray): initial is multiDimensionalArrayComplex => initial[0] instanceof Array;
-
-          const flattenNumberArrays = (initial: multiDimensionalArray) => {
-            if (isNumberArray(initial)) {
-              return [initial];
-            }
-
-            if (isNumberArrayArray(initial)) {
-              const acc = [] as [number, number][];
-
-              initial.forEach((coordinate) => {
-                acc.push(...flattenNumberArrays(coordinate));
-              });
-
-              return acc;
-            }
-
-            return [] as [number, number][];
-          };
-
-
 
           flattenNumberArrays(geometry.coordinates).forEach((coordinate) => {
             bounds.extend(coordinate);

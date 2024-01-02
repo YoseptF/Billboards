@@ -25,7 +25,9 @@ type Override = {
       updatedAt?: string;
       customerId?: string;
       deletedAt?: string;
+      mapId?: string;
       Customer?: string;
+      Map?: string;
       BillboardInPlace?: string;
     };
   }
@@ -54,6 +56,19 @@ type Override = {
       Billboard?: string;
     };
   }
+  Map?: {
+    name?: string;
+    fields?: {
+      id?: string;
+      name?: string;
+      createdAt?: string;
+      updatedAt?: string;
+      deletedAt?: string;
+      geoJson?: string;
+      Billboard?: string;
+      Place?: string;
+    };
+  }
   Place?: {
     name?: string;
     fields?: {
@@ -62,10 +77,8 @@ type Override = {
       createdAt?: string;
       updatedAt?: string;
       deletedAt?: string;
-      east?: string;
-      north?: string;
-      south?: string;
-      west?: string;
+      mapId?: string;
+      Map?: string;
       BillboardInPlace?: string;
     };
   }
@@ -439,6 +452,7 @@ interface BlueprintDateField {
 export interface Blueprint {
   Billboard?: {
     Customer?: BlueprintRelationField;
+    Map?: BlueprintRelationField;
     BillboardInPlace?: BlueprintRelationField;
   }
   BillboardInPlace?: {
@@ -448,7 +462,13 @@ export interface Blueprint {
   Customer?: {
     Billboard?: BlueprintRelationField;
   }
+  Map?: {
+    geoJson?: BlueprintJsonField;
+    Billboard?: BlueprintRelationField;
+    Place?: BlueprintRelationField;
+  }
   Place?: {
+    Map?: BlueprintRelationField;
     BillboardInPlace?: BlueprintRelationField;
   }
   _http_response?: {
