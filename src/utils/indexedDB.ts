@@ -10,42 +10,19 @@ export const indexedDBStores = [MAPS_STORE] as const;
 
 export type indexedDBStoresNames = typeof indexedDBStores[number];
 
-export const maps = ["mexico_states"] as const;
+export const maps = ["mexican_states", "billboards"] as const;
 
 export type mapsNames = typeof maps[number];
 
-type Point = [number, number];
-
-type Polygon = Point[];
-
-type MultiPolygon = Polygon[];
-
-export interface PointPolygon {
-  type: "Polygon";
-  coordinates: Polygon;
-}
-
-export interface MultiPointPolygon {
-  type: "MultiPolygon";
-  coordinates: MultiPolygon;
-}
-
-export interface PointPoint {
-  type: "Point";
-  coordinates: Point;
-}
-
-export type Geometry = PointPolygon | MultiPointPolygon | PointPoint;
-
 export type MapType = {
-  type: string;
+  type: "FeatureCollection";
   features: {
       type: "Feature";
       properties: {
           id: string;
           [key: string]: string | number;
       };
-      geometry: Geometry;
+      geometry: GeoJSON.Geometry;
   }[];
 }
 

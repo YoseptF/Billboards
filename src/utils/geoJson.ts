@@ -1,3 +1,6 @@
+import capitalize from "lodash/capitalize";
+import mx from "../jsons/mx_states.json";
+
 export type multiDimensionalArray = number[] | number[][] | number[][][] | number[][][][];
 
 export type multiDimensionalArrayComplex = Exclude<multiDimensionalArray, number[]>;
@@ -23,3 +26,8 @@ export const flattenNumberArrays = (initial: multiDimensionalArray) => {
 
   return [] as [number, number][];
 };
+
+export const mexicanStatesNames = mx.features.map((state) => ({
+  name: state.properties.state_name.split("_").map(sn => capitalize(sn)).join(" "),
+  name_raw: state.properties.state_name,
+}));
