@@ -20,9 +20,10 @@ export const loadMapSource = async (mapName: mapsNames, mapboxMap: mapboxgl.Map,
   mapboxMap.addSource(mapName, {
     type: "geojson",
     data: map,
+    promoteId: "id",
     ...(options?.cluster && {
       cluster: true,
-      clusterRadius: 80,
+      clusterRadius: 50
     })
   });
 };

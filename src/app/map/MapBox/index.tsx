@@ -17,6 +17,47 @@ import { loadMapSource } from "./utils";
 import mapboxgl from "mapbox-gl";
 import { useSearchParams } from "next/navigation";
 
+const getMarker = (count: number) => {
+  const markerWrapper = document.createElement("div");
+
+  const svgSize = (count < 10 ? 14 : count < 100 ? 16 : 19) * 4;
+  const svgWidth = `${svgSize}px`;
+
+  const circleSize = count > 99 ? 25 : svgSize / 2.5;
+
+  let fontSize = 16;
+  let imageWidth = 32;
+
+  if (count >= 1000) {
+    fontSize = 10;
+    imageWidth = 55;
+  } else if (count < 1000 && count > 100) {
+    fontSize = 14;
+    imageWidth = 45;
+  }
+
+  markerWrapper.innerHTML = `<div>
+  <svg
+  width="${svgWidth}"
+  height="${svgWidth}"
+  viewBox='0 0 55 55' // Changed to use numerical value for svgSize
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+  style="cursor: pointer;"
+  >
+  <circle cx="27.2" cy="27.2" r="${circleSize}" fill="#4596C4" />
+  <path
+    d='M27.2,0C12.2,0,0,12.2,0,27.2s12.2,27.2,27.2,27.2s27.2-12.2,27.2-27.2S42.2,0,27.2,0z M6,27.2 C6,15.5,15.5,6,27.2,6s21.2,9.5,21.2,21.2c0,11.7-9.5,21.2-21.2,21.2S6,38.9,6,27.2z'
+    fill='#0D3B66'
+  >
+  </path>
+  <text dx="27" dy="32" text-anchor="middle" style="font-size: ${fontSize}px; fill: #FFFFFF; font-family: Arial, Verdana; font-weight: bold; pointer-events: none;">${count}</text>
+  </svg>
+</div>`;
+  return markerWrapper.firstChild as HTMLElement;
+};
+
+
 type markersObject = { [id: string]: mapboxgl.Marker };
 
 const updateMarkers = (map: mapboxgl.Map, markers: markersObject, markersOnScreen: markersObject) => {
@@ -38,8 +79,9 @@ const updateMarkers = (map: mapboxgl.Map, markers: markersObject, markersOnScree
         let marker = markers[id];
         if (!marker) {
           marker = markers[id] = new mapboxgl.Marker({
-            color: "#E73936",
+            element: getMarker(props.point_count),
           }).setLngLat([coords[0], coords[1]]);
+
         }
         newMarkers[id] = marker;
 
@@ -55,24 +97,7 @@ const updateMarkers = (map: mapboxgl.Map, markers: markersObject, markersOnScree
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_KEY!;
 
-const markerWrapper = document.createElement("div");
-markerWrapper.innerHTML = `<div>
-<svg
-width="35px"
-height="35px"
-viewBox="0 0 24 24"
-xmlns="http://www.w3.org/2000/svg"
-fill="none"
->
-<path
-fill="#E73936"
-fill-rule="evenodd"
-d="M11.291 21.706 12 21l-.709.706zM12 21l.708.706a1 1 0 0 1-1.417 0l-.006-.007-.017-.017-.062-.063a47.708 47.708 0 0 1-1.04-1.106 49.562 49.562 0 0 1-2.456-2.908c-.892-1.15-1.804-2.45-2.497-3.734C4.535 12.612 4 11.248 4 10c0-4.539 3.592-8 8-8 4.408 0 8 3.461 8 8 0 1.248-.535 2.612-1.213 3.87-.693 1.286-1.604 2.585-2.497 3.735a49.583 49.583 0 0 1-3.496 4.014l-.062.063-.017.017-.006.006L12 21zm0-8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
-clip-rule="evenodd"
-/>
-</svg>
-</div>`;
-const markerElement = markerWrapper.firstChild as HTMLElement;
+
 
 const MapBox: FC = () => {
   const isMapInitialized = useRef(false);
@@ -94,6 +119,7 @@ const MapBox: FC = () => {
         ],
       });
       currentMap.addControl(new mapboxgl.NavigationControl());
+
       currentMap.on("load", async () => {
         currentMap.removeLayer("admin-1-boundary");
         await loadMapSource("mexican_states", currentMap);
@@ -107,15 +133,70 @@ const MapBox: FC = () => {
       let markersOnScreen: markersObject = {};
 
       currentMap.on("render", () => {
-        try {
+        if (!currentMap.getSource("billboards")) return;
 
-          if (!currentMap.isSourceLoaded("billboards")) return;
+        const newMarkers = updateMarkers(currentMap, markers, markersOnScreen);
+        markersOnScreen = newMarkers;
+      });
 
-          const newMarkers = updateMarkers(currentMap, markers, markersOnScreen);
-          markersOnScreen = newMarkers;
-        } catch {
-          // ignore
+      currentMap.on("click", "billboards-layer-transparent", (e) => {
+        const features = currentMap.queryRenderedFeatures(e.point, {
+          layers: ["billboards-layer-transparent"]
+        });
+
+        const [feature] = features;
+
+        console.debug(feature);
+
+        if (!feature?.properties || !feature.properties.cluster_id) return;
+
+        const center: [number, number] = match(feature.geometry)
+          .with({ type: "Point", coordinates: P.select() }, (coordinates) => [coordinates[0], coordinates[1]] as [number, number])
+          .otherwise(() => [0, 0]);
+
+        const clusterId = feature.properties.cluster_id;
+
+        match(currentMap.getSource("billboards"))
+          .with({ type: "geojson" }, (source) => source.getClusterExpansionZoom(
+            clusterId,
+            (err, zoom) => {
+              if (err) return;
+
+              currentMap.easeTo({
+                center,
+                zoom: zoom + 2
+              });
+            }
+          ));
+      });
+
+      let hoveredPolygonId: string | number | undefined;
+
+      currentMap.on("mousemove", "billboards-layer", (e) => {
+        const { features } = e;
+        if (!features) return;
+
+        if (features.length > 0 && features[0].id) {
+
+          hoveredPolygonId = features[0].id;
+
+          if (hoveredPolygonId) {
+            currentMap.setFeatureState(
+              { source: "billboards", id: hoveredPolygonId },
+              { hover: true }
+            );
+          }
         }
+      });
+
+      currentMap.on("mouseleave", "billboards-layer", () => {
+        if (hoveredPolygonId !== null && hoveredPolygonId) {
+          currentMap.setFeatureState(
+            { source: "billboards", id: hoveredPolygonId },
+            { hover: false }
+          );
+        }
+        hoveredPolygonId = undefined;
       });
     };
 
@@ -141,14 +222,35 @@ const MapBox: FC = () => {
         });
 
         m.addLayer({
-          "id": "bili",
+          "id": "billboards-layer",
           "type": "circle",
           "source": "billboards",
           "filter": ["!=", "cluster", true],
           "paint": {
-            "circle-color": "red",
-            "circle-opacity": 0.6,
-            "circle-radius": 12
+            "circle-color": "#E73936",
+            "circle-radius": [
+              "case",
+              ["boolean", ["feature-state", "hover"], false],
+              25,
+              15
+            ],
+            "circle-opacity": [
+              "case",
+              ["boolean", ["feature-state", "hover"], false],
+              1,
+              0.5
+            ]
+          }
+        });
+
+        m.addLayer({
+          "id": "billboards-layer-transparent",
+          "type": "circle",
+          "source": "billboards",
+          "paint": {
+            "circle-color": "#E73936",
+            "circle-radius": 30,
+            "circle-opacity": 0
           }
         });
 
@@ -188,7 +290,7 @@ const MapBox: FC = () => {
       <div
         id="map"
         ref={initializeMap}
-        className="w-screen h-screen"
+        className="w-screen h-screen [&>div>div>svg>circle:hover]:fill-[#0D3B66]"
       />
     </div>
   );

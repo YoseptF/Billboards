@@ -15,6 +15,7 @@
     "no-console": ["error", { "allow": ["warn", "error", "info"] }],
     "arrow-body-style": ["error", "as-needed"],
     "prefer-template": "error",
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "arrow-parens": ["error", "always"]
   }
 }
