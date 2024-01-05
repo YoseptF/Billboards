@@ -1,40 +1,34 @@
 import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import MexicoMap from "./StateSelector/MexicoMap";
 import StateSelector from "./StateSelector";
-import supabase from "@/graphql/supabase";
 import Transition from "./Transition";
 
-const Home: FC = async () => {
-  // select the first billboard
-  const response = await supabase.from("Billboard").select("*").limit(1);
-
-  console.info("response", response);
-
-  return (
-    <Transition>
-      <main className="flex flex-col items-center">
-        <nav className='w-full bg-red-50'>
-          <Image
-            src="https://via.placeholder.com/34?text=Logo"
-            alt="logo"
-            width={34}
-            height={34}
-            className='rounded-full'
-            priority
-          />
-        </nav>
-        <div>
-          test
-        </div>
-        <Link href="/map">
-          <span>Map</span>
+const Home: FC = () => (
+  <Transition>
+    <main className="flex flex-col items-center">
+      <nav className='w-full bg-red-50 flex justify-between'>
+        <Image
+          src="https://via.placeholder.com/34?text=Logo"
+          alt="logo"
+          width={34}
+          height={34}
+          className='rounded-full'
+          priority
+        />
+        <Link href="/login">
+          <span>Login</span>
         </Link>
-        <StateSelector states={["state_of_mexico", "puebla", "coahuila", "queretaro", "nuevo_leon", "chihuahua"]} />
-      </main>
-    </Transition>
-  );
-};
+      </nav>
+      <div>
+        test
+      </div>
+      <Link href="/map">
+        <span>Map</span>
+      </Link>
+      <StateSelector states={["state_of_mexico", "puebla", "coahuila", "queretaro", "nuevo_leon", "chihuahua"]} />
+    </main>
+  </Transition>
+);
 
 export default Home;

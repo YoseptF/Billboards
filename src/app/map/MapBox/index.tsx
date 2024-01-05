@@ -110,21 +110,21 @@ const MapBox: FC = () => {
     if (node && !isMapInitialized.current) {
       isMapInitialized.current = true;
       const currentMap = new mapboxgl.Map({
-        container: "map", // container ID
+        container: "map",
         style: "mapbox://styles/mapbox/streets-v12",
         center: [-98.219147, 19.045243],
         bounds: [
-          [-117.111511, 32.512078], // Southwest coordinates
-          [-88.371277, 14.623451], // Northeast coordinates
+          [-117.111511, 32.512078],
+          [-88.371277, 14.623451],
         ],
       });
       currentMap.addControl(new mapboxgl.NavigationControl());
 
       currentMap.on("load", async () => {
+
         currentMap.removeLayer("admin-1-boundary");
         await loadMapSource("mexican_states", currentMap);
         await loadMapSource("billboards", currentMap, { cluster: true });
-
 
         setMap(currentMap);
       });
@@ -145,8 +145,6 @@ const MapBox: FC = () => {
         });
 
         const [feature] = features;
-
-        console.debug(feature);
 
         if (!feature?.properties || !feature.properties.cluster_id) return;
 
@@ -203,10 +201,47 @@ const MapBox: FC = () => {
   };
 
   useEffect(() => {
+
+    const setBillboards = (map: mapboxgl.Map) => {
+      if (map.getLayer("state-borders")) map.removeLayer("state-borders");
+      map.addLayer({
+        "id": "billboards-layer",
+        "type": "circle",
+        "source": "billboards",
+        "filter": ["!=", "cluster", true],
+        "paint": {
+          "circle-color": "#E73936",
+          "circle-radius": [
+            "case",
+            ["boolean", ["feature-state", "hover"], false],
+            25,
+            15
+          ],
+          "circle-opacity": [
+            "case",
+            ["boolean", ["feature-state", "hover"], false],
+            1,
+            0.5
+          ]
+        }
+      });
+
+      map.addLayer({
+        "id": "billboards-layer-transparent",
+        "type": "circle",
+        "source": "billboards",
+        "paint": {
+          "circle-color": "#E73936",
+          "circle-radius": 30,
+          "circle-opacity": 0
+        }
+      });
+    };
+
     match([map, stateFromParams])
       .with([P.nullish, P.any], () => { console.info("waiting for map"); })
       .with([P.not(P.nullish), P.string], async ([m, sfp]) => {
-        if (m.getLayer("state-borders")) m.removeLayer("state-borders");
+        setBillboards(m);
 
         m.addLayer({
           id: "state-borders",
@@ -221,38 +256,7 @@ const MapBox: FC = () => {
           filter: ["==", "state_name", sfp],
         });
 
-        m.addLayer({
-          "id": "billboards-layer",
-          "type": "circle",
-          "source": "billboards",
-          "filter": ["!=", "cluster", true],
-          "paint": {
-            "circle-color": "#E73936",
-            "circle-radius": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              25,
-              15
-            ],
-            "circle-opacity": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              1,
-              0.5
-            ]
-          }
-        });
 
-        m.addLayer({
-          "id": "billboards-layer-transparent",
-          "type": "circle",
-          "source": "billboards",
-          "paint": {
-            "circle-color": "#E73936",
-            "circle-radius": 30,
-            "circle-opacity": 0
-          }
-        });
 
         // based on the state, find boundaries and zoom to it
         let mexicoStates = await getMap("mexican_states");
@@ -274,7 +278,7 @@ const MapBox: FC = () => {
 
       })
       .with([P.not(P.nullish), P.nullish], ([m]) => {
-        if (m.getLayer("state-borders")) m.removeLayer("state-borders");
+        setBillboards(m);
       })
       .exhaustive();
 

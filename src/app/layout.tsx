@@ -1,8 +1,10 @@
 import "./globals.css";
+import "@fontsource/poppins";
 
 import { FC, ReactNode } from "react";
 
 import ApolloProvider from "./providers/ApolloProvider";
+import ChakraProvider from "./providers/ChakraProvider";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 
@@ -18,11 +20,15 @@ interface RootLayoutProps {
 }
 
 const RootLayout: FC<RootLayoutProps> = ({ children }) => (
-  <ApolloProvider>
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  </ApolloProvider>
+  <html lang="en">
+    <body className={inter.className}>
+      <ApolloProvider>
+        <ChakraProvider>
+          {children}
+        </ChakraProvider>
+      </ApolloProvider>
+    </body>
+  </html>
 );
 
 export default RootLayout;

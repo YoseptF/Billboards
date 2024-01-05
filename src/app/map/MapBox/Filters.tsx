@@ -14,7 +14,7 @@ interface FormValues {
   interest: string;
 }
 const FilterFields = (props: FormikProps<FormValues>) => {
-  const { touched, errors, isSubmitting, values } = props;
+  const { touched, errors, isSubmitting, values, handleSubmit } = props;
 
   const [mexicanStatesNames, setMexicanStatesNames] = useState<{ name: string, name_raw: string }[]>([]);
 
@@ -50,17 +50,20 @@ const FilterFields = (props: FormikProps<FormValues>) => {
   }, [values.state, router]);
 
   return (
-    <Form className={
-      classNames(
-        "h-screen flex flex-col p-2 justify-between shadow-md text-[#0D3B66] bg-[#0D3B66]",
-        "[&>section>*]:border [&>section>*]border-gray-400 [&>section>*]rounded [&>section>*]p-2 [&>section>*]mb-2 [&>section>*]:rounded-[4px] [&>section>*]:w-56 [&>section>*]:h-10",
-        "[&>section>*]:p-2",
-      )
-    }>
+    <Form
+      className={
+        classNames(
+          "h-screen flex flex-col p-2 justify-between shadow-md",
+          "[&>section>*]:border [&>section>*]border-gray-400 [&>section>*]rounded [&>section>*]p-2 [&>section>*]mb-2 [&>section>*]:rounded-[4px] [&>section>*]:w-56 [&>section>*]:h-10",
+          "[&>section>*]:p-2",
+        )
+      }
+      onSubmit={handleSubmit}
+    >
       <section className="flex flex-col gap-2">
         <Field as="select" name="state">
           <option value="">Select a state</option>
-          {mexicanStatesNames.sort((x,y) => x.name_raw > y.name_raw ? 1 : -1).map((state) => (
+          {mexicanStatesNames.sort((x, y) => x.name_raw > y.name_raw ? 1 : -1).map((state) => (
             <option key={state.name_raw} value={state.name_raw}>
               {state.name}
             </option>

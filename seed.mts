@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker/locale/es_MX'
-import mx from "./src/jsons/mx_states.json"
-import billboards from "./src/jsons/billboards.json"
+import mx from "./jsons/mx_states.json"
+import billboards from "./jsons/billboards.json"
 import { SnapletClient, MapGeojsonJsonField } from '@snaplet/seed';
 // import { copycat } from "@snaplet/copycat"
 // import inside from 'point-in-polygon'
