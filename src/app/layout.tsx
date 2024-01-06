@@ -22,6 +22,7 @@ interface RootLayoutProps {
 const RootLayout: FC<RootLayoutProps> = ({ children }) => (
   <html lang="en">
     <body className={inter.className}>
+      <link rel="stylesheet" href="/scripts/geojson.css" />
       <ApolloProvider>
         <ChakraProvider>
           {children}
