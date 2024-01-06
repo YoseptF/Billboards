@@ -16,6 +16,7 @@
     "arrow-body-style": ["error", "as-needed"],
     "prefer-template": "error",
     "semi": ["error", "always"],
-    "arrow-parens": ["error", "always"]
+    "arrow-parens": ["error", "always"],
+    "object-shorthand": ["error", "always"]
   }
 }

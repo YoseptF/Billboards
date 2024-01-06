@@ -1,28 +1,48 @@
 "use client";
 
 import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
+import { FC, useEffect, useState } from "react";
+import Links, { Route } from "./Links";
 
-import { FC } from "react";
 import Image from "next/image";
 import { Link } from "@chakra-ui/next-js";
-import Links from "./Links";
-import Separator from "@/components/Separator";
 import supabase from "@/graphql/supabase";
 import { useRouter } from "next/navigation";
 
 const Sidebar: FC = () => {
   const { push } = useRouter();
-  const logout = async () => {
-    const { data, error } = await supabase.auth.signOut();
+  const [mapRoutes, setMapRoutes] = useState<Route[]>([]);
 
+  useEffect(() => {
+    const fetchLinks = async () => {
+      const { data } = await supabase.from("Map").select("id, name");
+
+      if(!data) throw new Error("Maps not found");
+
+      const routes = data.map(({ id, name }) => ({
+        path: `/dashboard/maps?id=${id}`,
+        name: `Map ${name}`,
+        type: "route",
+      }));
+
+      setMapRoutes(routes);
+    };
+
+    fetchLinks();
+  },[]);
+
+
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
     if (error) {
-      console.log(error);
+      console.error(error);
       return;
     }
-
     push("/");
-
   };
+
+
+
   return (
 
     <Box
@@ -61,22 +81,27 @@ const Sidebar: FC = () => {
             </Heading>
           </Flex>
         </Link>
-        <Separator />
       </Box>
       <Stack direction="column" mb="40px" justify="space-between" flexGrow="1">
         <Flex flexDir="column" gap={2}>
-          <Links routes={[
+          <Links pieces={[
             {
+              name: "Maps",
+              type: "category",
               icon: { name: "house", type: "solid" },
-              path: "/dashboard",
-              name: "Home",
-              views: [],
+              views: [
+                {
+                  path: "/dashboard/home",
+                  name: "Home",
+                  type: "route",
+                },
+              ],
             },
             {
+              name: "Maps",
+              type: "category",
               icon: { name: "map", type: "solid" },
-              path: "/map",
-              name: "Map",
-              views: [],
+              views: mapRoutes,
             },
           ]} />
         </Flex>

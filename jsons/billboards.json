@@ -15601,5 +15601,23 @@
         "id": "0ea5549c-ba7c-5b08-944d-4db94c7dc5ce"
       }
     }
-  ]
+  ],
+  "layerOptions": {
+    "id": "billboards_layer",
+    "type": "circle",
+    "source": "billboards_source",
+    "paint": {
+      "circle-radius": 10,
+      "circle-color": "#007cbf",
+      "circle-stroke-width": 1,
+      "circle-stroke-color": "#fff"
+    }
+  },
+  "clusterOptions": {
+    "cluster": false,
+    "clusterMaxZoom": 14,
+    "clusterRadius": 50,
+    "clusterMinPoints": 2,
+    "clusterProperties": {}
+  }
 }

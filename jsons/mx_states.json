@@ -68507,5 +68507,23 @@
         ]
       }
     }
-  ]
+  ],
+  "layerOptions": {
+    "id": "mexican_states_layer",
+    "type": "circle",
+    "source": "mexican_states_source",
+    "paint": {
+      "circle-radius": 10,
+      "circle-color": "#007cbf",
+      "circle-stroke-width": 1,
+      "circle-stroke-color": "#fff"
+    }
+  },
+  "clusterOptions": {
+    "cluster": false,
+    "clusterMaxZoom": 14,
+    "clusterRadius": 50,
+    "clusterMinPoints": 2,
+    "clusterProperties": {}
+  }
 }

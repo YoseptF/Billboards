@@ -1,38 +1,44 @@
 /*eslint-disable*/
 // chakra imports
 import {
-  Box,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Button,
   Flex,
-  Heading,
-  Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import Icon, { IconCoreProps, IconName } from "@/components/Icon";
 
 import { FC } from "react";
-import Image from "next/image";
 import { Link } from "@chakra-ui/next-js"
-import Separator from "@/components/Separator";
+import { match } from "ts-pattern";
 import { usePathname } from 'next/navigation'
 
-// this function creates the links and collapses that appear in the sidebar (left menu)
+interface Category {
+  name: string;
+  views: Route[];
+  type: "category";
+  icon?: IconCoreProps | IconName;
+}
 
 interface Route {
   path: string;
   name: string;
-  icon: IconCoreProps | IconName;
-  redirect?: boolean;
-  category?: boolean;
-  views: Route[];
+  type: "route";
+  icon?: IconCoreProps | IconName;
 }
+
+export type LinkPiece = Category | Route;
 
 interface LinksProps {
-  routes: Route[];
+  pieces: LinkPiece[];
 }
 
-const Links: FC<LinksProps> = ({ routes }) => {
+const Links: FC<LinksProps> = ({ pieces }) => {
 
   let pathname = usePathname();
 
@@ -47,50 +53,67 @@ const Links: FC<LinksProps> = ({ routes }) => {
   };
 
   return (
-    <>
+    <Accordion allowMultiple defaultIndex={[0]}>
       {
-        routes.map(({ category, name, views, icon, path }) => {
-          if (category) {
+        pieces.map((piece) => match(piece)
+          .with({ type: "category" }, ({ name, views, icon }) => {
             return (
-              <div key={name}>
-                <Text
-                  color={activeColor}
-                  fontWeight="bold"
-                  mb={{
-                    xl: "12px",
-                  }}
-                  mx="auto"
-                  ps={{
-                    sm: "10px",
-                    xl: "16px",
-                  }}
-                  py="12px"
-                >
-                  prop.name
-                </Text>
-                <Links routes={views} />
-              </div>
+              <AccordionItem key={name + "_category" + views.map(v => v.path).join("_")}>
+                <AccordionButton>
+                  <Flex gap={2} color="white" justifyContent="space-between" grow={1}>
+                    <Text
+                      fontWeight="bold"
+                      textAlign="center"
+                      display="flex"
+                      alignItems="center"
+                      gap={2}
+                    >
+                      <Icon icon={icon} />
+                      {name}
+                    </Text>
+                    <AccordionIcon />
+                  </Flex>
+                </AccordionButton>
+                <AccordionPanel maxH={300} overflowY='auto' css={{
+                  '&::-webkit-scrollbar': {
+                    width: '4px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    width: '6px',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    background: activeColor,
+                    borderRadius: '24px',
+                  },
+                }}>
+
+                  <Links pieces={views} />
+                </AccordionPanel>
+              </AccordionItem>
+
             );
-          }
+          })
+          .with({ type: "route" }, ({ path, name, icon }) => {
+            const isActiveRoute = activeRoute(path) === "active";
 
-          const isActiveRoute = activeRoute(path) === "active";
-
-          return (
-            <Link href={path} key={name}>
-              <Button
-                w="100%"
-                bg={!isActiveRoute ? "transparent" : undefined}
-              >
-                <Flex gap={2} color={isActiveRoute ? activeColor : inactiveColor}>
-                  <Icon icon={icon} />
-                  <Text fontSize="sm">{name}</Text>
-                </Flex>
-              </Button>
-            </Link>
-          );
-        })
+            return (
+              <Link href={path} key={name + "_route" + path}>
+                <Button
+                  w="100%"
+                  bg={!isActiveRoute ? "transparent" : "primary.50"}
+                >
+                  <Flex gap={2} color={!isActiveRoute ? inactiveColor : activeColor}>
+                    <Icon icon={icon} />
+                    <Text fontSize="sm">{name}</Text>
+                  </Flex>
+                </Button>
+              </Link>
+            )
+          })
+          .exhaustive()
+        )
       }
-    </>
+    </Accordion>
   );
 };
 
