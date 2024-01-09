@@ -153,11 +153,8 @@ const Maps: FC = () => {
 
       if (type !== "jsonUpdated" || !map || !mapIdFromParams) return;
 
-      console.debug("jsonUpdated", map, mapIdFromParams);
+      await supabase.from("Map").update({ geoJson: map }).eq("id", mapIdFromParams).select("*");
 
-      const res = await supabase.from("Map").update({ geoJson: map }).eq("id", mapIdFromParams).select("*");
-
-      console.debug("update", res);
     };
 
     if(isMapInitialized) {
