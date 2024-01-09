@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -102.7981338277459,
+          19.572665495798
+        ]
+      },
+      "properties": {
+        "id": "e99ec44e-23b5-5b06-b097-d766c0367b63"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.4252946712077,
+          30.027300878428
+        ]
+      },
+      "properties": {
+        "id": "fb7fa2e0-248d-5c3f-bd7d-5b5b11295727"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -99.6109560504556,
+          26.0678916145116
+        ]
+      },
+      "properties": {
+        "id": "8a2cf761-edc1-5a74-9e71-a697d28774f1"
+      }
+    }
+  ],
+  "layerOptions": {
+    "id": "billboards_layer",
+    "type": "circle",
+    "source": "billboards_source",
+    "paint": {
+      "circle-radius": 10,
+      "circle-color": "#007cbf",
+      "circle-stroke-width": 1,
+      "circle-stroke-color": "#fff"
+    }
+  },
+  "clusterOptions": {
+    "cluster": false,
+    "clusterMaxZoom": 14,
+    "clusterRadius": 50,
+    "clusterMinPoints": 2,
+    "clusterProperties": {}
+  }
+}

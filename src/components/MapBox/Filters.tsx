@@ -23,7 +23,7 @@ const FilterFields = (props: FormikProps<FormValues>) => {
       let statesMap = await getMap("mexican_states");
 
       while (!statesMap) {
-        setTimeout(() => { }, 500);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         statesMap = await getMap("mexican_states");
       }
 

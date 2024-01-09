@@ -78,6 +78,22 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_KEY!;
 type EnhancedGeoJSON = GeoJSON.FeatureCollection & { clusterOptions: clusterOption } & { layerOptions: mapboxgl.AnyLayer & { source: string } }
 
 const Maps: FC = () => {
+  const [isMapInitialized, setIsMapInitializedInternal] = useState(false);
+  const isMapInitializedRef = useRef(isMapInitialized);
+
+  const setIsMapInitialized: Dispatch<SetStateAction<boolean>> = (value) => {
+    if(value instanceof Function) {
+      setIsMapInitializedInternal((oldValue) => {
+        isMapInitializedRef.current = oldValue;
+
+        return value(oldValue);
+      });
+    } else {
+      isMapInitializedRef.current = value;
+      setIsMapInitializedInternal(value);
+    }
+  };
+
   const params = useSearchParams();
   const mapIdFromParams = params.get("id");
 
@@ -91,6 +107,19 @@ const Maps: FC = () => {
 
       const geoJson = data.geoJson as unknown as EnhancedGeoJSON;
 
+      const initializeMap = (event: MessageEvent) => {
+        const { type, map } = event.data;
+
+        if (type !== "jsonUpdated" || isMapInitializedRef.current || !map) return;
+
+        window.removeEventListener("message", initializeMap);
+
+        setIsMapInitialized(true);
+
+      };
+
+      window.addEventListener("message", initializeMap);
+
       window.postMessage(
         {
           type: "setMap",
@@ -99,10 +128,47 @@ const Maps: FC = () => {
         "*"
       );
 
+      do {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        if(!isMapInitializedRef.current) {
+          window.postMessage(
+            {
+              type: "setMap",
+              map: geoJson,
+            },
+            "*"
+          );
+        }
+      } while (!isMapInitializedRef.current);
+
     };
 
     setJsonFromId();
   }, [mapIdFromParams]);
+
+  useEffect(() => {
+    const handleJsonUpdated = async (event: MessageEvent) => {
+      const { type, map } = event.data;
+
+      if (type !== "jsonUpdated" || !map || !mapIdFromParams) return;
+
+      console.debug("jsonUpdated", map, mapIdFromParams);
+
+      const res = await supabase.from("Map").update({ geoJson: map }).eq("id", mapIdFromParams).select("*");
+
+      console.debug("update", res);
+    };
+
+    if(isMapInitialized) {
+      window.addEventListener("message", handleJsonUpdated);
+    }
+
+
+    return () => {
+      window.removeEventListener("message", handleJsonUpdated, false);
+    };
+  }, [isMapInitialized, mapIdFromParams]);
 
 
   return (

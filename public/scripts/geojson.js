@@ -45061,10 +45061,9 @@
 	    }
 
 	    context.dispatch.on('change.json', (event) => {
-	      console.debug('change.json', event);
 	      const { obj } = event;
 	      const { map } = obj;
-	      window.postMessage({ type: 'jsonUpdated', data: map }, '*');
+	      window.postMessage({ type: 'jsonUpdated', map }, '*');
 	      if (event.source !== 'json') {
 	        const scrollInfo = editor.getScrollInfo();
 	        editor.setValue(JSON.stringify(context.data.get('map'), null, 2));
@@ -64918,74 +64917,9 @@
 	        if (event.data && event.data.type === 'setMap') {
 	          context.data.set(event.data);
 	        }
-	        if (event.data && event.data.type === 'jsonUpdated') {
-	          console.debug('listener Works', event.data);
-	        }
 	      },
 	      false
 	    );
-
-	    window.addEventListener('keydown', (event) => {
-	      if (event.key === 'w') {
-	        console.log('w');
-	        window.postMessage(
-	          {
-	            type: 'setMap',
-	            map: {
-	              type: 'FeatureCollection',
-	              features: [
-	                {
-	                  type: 'Feature',
-	                  properties: {},
-	                  geometry: {
-	                    coordinates: [
-	                      [
-	                        [-98.77769081491577, 21.080422392063653],
-	                        [-98.91808805936259, 20.874210356101344],
-	                        [-98.67042100986143, 20.946416924086222],
-	                        [-98.77769081491577, 21.080422392063653]
-	                      ]
-	                    ],
-	                    type: 'Polygon'
-	                  }
-	                }
-	              ]
-	            }
-	          },
-	          '*'
-	        );
-	      }
-	      if (event.key === 'e') {
-	        console.log('e');
-	        window.postMessage(
-	          {
-	            type: 'setMap',
-	            map: {
-	              type: 'FeatureCollection',
-	              features: [
-	                {
-	                  type: 'Feature',
-	                  properties: {},
-	                  geometry: {
-	                    coordinates: [
-	                      [
-	                        [-97.83859634782686, 19.3764691902565],
-	                        [-99.19206886838944, 19.670446723326904],
-	                        [-99.49841038884101, 18.242928879547733],
-	                        [-97.13122593437492, 18.57059123985806],
-	                        [-97.83859634782686, 19.3764691902565]
-	                      ]
-	                    ],
-	                    type: 'Polygon'
-	                  }
-	                }
-	              ]
-	            }
-	          },
-	          '*'
-	        );
-	      }
-	    });
 
 	    context.storage.remove('recover');
 	  }

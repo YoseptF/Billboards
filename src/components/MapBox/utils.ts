@@ -7,7 +7,8 @@ import { getMap, mapsNames, MapType, saveMap } from "@/utils/indexedDB";
 import supabase from "@/graphql/supabase";
 
 export const loadMapSource = async (mapName: mapsNames, mapboxMap: mapboxgl.Map, options?: { cluster?: boolean }) => {
-  let map = await getMap(mapName);
+  // let map = await getMap(mapName);
+  let map: MapType | undefined;
 
   if (!map) {
     const { data, error } = await supabase.from("Map").select("*").eq("name", mapName);
