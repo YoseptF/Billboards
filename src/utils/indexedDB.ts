@@ -1,3 +1,5 @@
+"use client";
+
 import { DBSchema, openDB } from "idb";
 
 export const DB_NAME = "billboards:db";

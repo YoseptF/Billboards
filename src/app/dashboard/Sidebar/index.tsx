@@ -19,7 +19,7 @@ const Sidebar: FC = () => {
 
       if(!data) throw new Error("Maps not found");
 
-      const routes = data.map(({ id, name }) => ({
+      const routes: Route[] = data.map(({ id, name }) => ({
         path: `/dashboard/maps?id=${id}`,
         name: `Map ${name}`,
         type: "route",

@@ -1,3 +1,7 @@
+"use client";
+
+console.info("----------------------- utils.ts");
+
 import { getMap, mapsNames, MapType, saveMap } from "@/utils/indexedDB";
 
 import supabase from "@/graphql/supabase";

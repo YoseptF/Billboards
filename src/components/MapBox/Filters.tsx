@@ -119,7 +119,7 @@ const Filters = withFormik<FiltersProps, FormValues>({
   },
 
   handleSubmit: (values) => {
-    console.debug(values);
+    console.info(values);
   },
 })(FilterFields);
 

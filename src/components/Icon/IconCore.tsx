@@ -1,9 +1,10 @@
-import { FC } from "react";
-import { library, IconName, IconPrefix, SizeProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
+import { IconName, IconPrefix, library, SizeProp } from "@fortawesome/fontawesome-svg-core";
+
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { FC } from "react";
 
 export type IconType = "solid" | "regular" | "brand";
 

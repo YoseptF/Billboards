@@ -1,6 +1,5 @@
 import { FC } from "react";
-import GoogleMap from "./MapBox";
-import MapBox from "./MapBox";
+import MapBox from "@/components/MapBox";
 
 const Page: FC = () => (
   <MapBox />

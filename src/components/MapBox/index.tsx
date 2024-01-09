@@ -97,8 +97,6 @@ const updateMarkers = (map: mapboxgl.Map, markers: markersObject, markersOnScree
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_KEY!;
 
-
-
 const MapBox: FC = () => {
   const isMapInitialized = useRef(false);
   const [map, setMap] = useState<mapboxgl.Map>();

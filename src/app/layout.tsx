@@ -1,3 +1,4 @@
+import "./polyfillIndexedDB";
 import "./globals.css";
 import "@fontsource/poppins";
 
@@ -18,6 +19,8 @@ export const metadata: Metadata = {
 interface RootLayoutProps {
   children: ReactNode;
 }
+
+
 
 const RootLayout: FC<RootLayoutProps> = ({ children }) => (
   <html lang="en">
