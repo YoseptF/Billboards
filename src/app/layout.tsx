@@ -1,5 +1,6 @@
 import "./polyfillIndexedDB";
 import "./globals.css";
+import "./geojson.css";
 import "@fontsource/poppins";
 
 import { FC, ReactNode } from "react";
@@ -25,7 +26,6 @@ interface RootLayoutProps {
 const RootLayout: FC<RootLayoutProps> = ({ children }) => (
   <html lang="en">
     <body className={inter.className}>
-      <link rel="stylesheet" href="/scripts/geojson.css" />
       <Providers>
         {children}
       </Providers>

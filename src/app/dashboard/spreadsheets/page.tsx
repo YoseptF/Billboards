@@ -61,39 +61,39 @@ const Spreadsheets: FC = () => {
   }));
 
 
-  const fileMenuItemSelect = (args) => {
-    let spreadsheet = spreadsheetRef.current;
-    if (args.item.text === "Microsoft Excel" && spreadsheet) {
-      args.cancel = true;
-      spreadsheet.saveAsJson().then((response) => {
-        let formData = new FormData();
-        formData.append("JSONData", JSON.stringify(response.jsonObject.Workbook));
-        formData.append("fileName", "Sample");
-        formData.append("saveType", "Xlsx");
-        fetch(
-          "https://services.syncfusion.com/react/production/api/spreadsheet/save",
-          {
-            method: "POST",
-            headers: { Authorization: "YOUR TEXT" },
-            body: formData,
-            mode: "no-cors"
-          }
-        ).then((response) => {
-          response.blob().then((data) => {
-            let anchor = createElement("a", {
-              attrs: { download: "Sample.xlsx" },
-            });
-            const url = URL.createObjectURL(data);
-            anchor.href = url;
-            document.body.appendChild(anchor);
-            anchor.click();
-            URL.revokeObjectURL(url);
-            document.body.removeChild(anchor);
-          });
-        });
-      });
-    }
-  };
+  // const fileMenuItemSelect = (args) => {
+  //   let spreadsheet = spreadsheetRef.current;
+  //   if (args.item.text === "Microsoft Excel" && spreadsheet) {
+  //     args.cancel = true;
+  //     spreadsheet.saveAsJson().then((response) => {
+  //       let formData = new FormData();
+  //       formData.append("JSONData", JSON.stringify(response.jsonObject.Workbook));
+  //       formData.append("fileName", "Sample");
+  //       formData.append("saveType", "Xlsx");
+  //       fetch(
+  //         "https://services.syncfusion.com/react/production/api/spreadsheet/save",
+  //         {
+  //           method: "POST",
+  //           headers: { Authorization: "YOUR TEXT" },
+  //           body: formData,
+  //           mode: "no-cors"
+  //         }
+  //       ).then((response) => {
+  //         response.blob().then((data) => {
+  //           let anchor = createElement("a", {
+  //             attrs: { download: "Sample.xlsx" },
+  //           });
+  //           const url = URL.createObjectURL(data);
+  //           anchor.href = url;
+  //           document.body.appendChild(anchor);
+  //           anchor.click();
+  //           URL.revokeObjectURL(url);
+  //           document.body.removeChild(anchor);
+  //         });
+  //       });
+  //     });
+  //   }
+  // };
 
   const handleUpdate = async () => {
     const spreadsheet = spreadsheetRef.current;
@@ -101,7 +101,6 @@ const Spreadsheets: FC = () => {
 
     const sheet = spreadsheet.getActiveSheet();
 
-    console.debug("sheet", sheet);
 
     if (!sheet.usedRange) return;
 
@@ -113,19 +112,16 @@ const Spreadsheets: FC = () => {
     const activeColums = [];
     const column = getColumn(sheet, 1);
 
-    console.debug("column", column);
 
     for (let i = 0; i <= lastColumn; i++) {
       for (let j = 0; j <= lastRow; j++) {
         let cell = getCell(j, i, sheet);
-        console.debug("cell", cell);
         if (cell && cell.value) {
           activeColums.push(`${JSON.stringify(cell)},${cell.value}`);
           break;
         }
       }
     }
-    console.log("activeColums", activeColums);
   };
 
 
