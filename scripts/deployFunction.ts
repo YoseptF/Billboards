@@ -9,8 +9,7 @@ if (!name) {
 
 
 // Your migration command
-const command: string = `yarn supabase functions deploy ${name}`;
+const command: string = `bun supabase functions deploy ${name}`;
 
 // Execute the command
 execSync(command, { stdio: "inherit" });
-console.log(`Function deployed: ${name}`);

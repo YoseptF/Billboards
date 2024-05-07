@@ -12,7 +12,7 @@ if (!name) {
 const filename: string = `${timestamp}_${name}.sql`;
 
 // Your migration command
-const command: string = `yarn --silent prisma migrate diff --from-schema-datasource ./supabase/schema.prisma --to-schema-datamodel ./supabase/schema.prisma --script > ./supabase/migrations/${filename}`;
+const command: string = `bun --silent prisma migrate diff --from-schema-datasource ./supabase/schema.prisma --to-schema-datamodel ./supabase/schema.prisma --script > ./supabase/migrations/${filename}`;
 
 // Execute the command
 execSync(command, { stdio: "inherit" });

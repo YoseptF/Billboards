@@ -13,7 +13,7 @@ if (!projectId) {
 }
 
 // Command you want to execute
-const command = `yarn --silent supabase gen types typescript ${isLocal ? "--local" : `--project-id ${projectId}`} > ./src/graphql/database.types.ts`;
+const command = `bun --silent supabase gen types typescript ${isLocal ? "--local" : `--project-id ${projectId}`} > ./src/graphql/database.types.ts`;
 
 // Execute the command
 exec(command, (error, stdout, stderr) => {
