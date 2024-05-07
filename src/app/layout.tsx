@@ -7,6 +7,7 @@ import { FC, ReactNode } from "react";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import Providers from "@/providers";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,8 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => (
       <Providers>
         {children}
       </Providers>
+      <Script type="text/javascript" src="/scripts/plugins.js" strategy="beforeInteractive"/>
+      <Script type="text/javascript" src="/scripts/main.js" strategy="beforeInteractive"/>
     </body>
   </html>
 );
