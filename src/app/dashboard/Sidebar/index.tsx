@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import Links, { Route } from "./Links";
 
 import Image from "next/image";
@@ -9,18 +9,20 @@ import { Link } from "@chakra-ui/next-js";
 import supabase from "@/graphql/supabase";
 import { useRouter } from "next/navigation";
 
+type RouteGetter = (initialPath: string) => Route[];
+
 const Sidebar: FC = () => {
   const { push } = useRouter();
-  const [mapRoutes, setMapRoutes] = useState<Route[]>([]);
+  const [mapRoutes, setMapRoutes] = useState<RouteGetter>(() => () => []);
 
   useEffect(() => {
     const fetchLinks = async () => {
       const { data } = await supabase.from("Map").select("id, name");
 
-      if(!data) throw new Error("Maps not found");
+      if (!data) throw new Error("Maps not found");
 
-      const routes: Route[] = data.map(({ id, name }) => ({
-        path: `/dashboard/maps?id=${id}`,
+      const routes: () => RouteGetter = () => (initialPath) => data.map(({ id, name }) => ({
+        path: `/dashboard/${initialPath}?id=${id}`,
         name: `Map ${name}`,
         type: "route",
       }));
@@ -29,7 +31,7 @@ const Sidebar: FC = () => {
     };
 
     fetchLinks();
-  },[]);
+  }, []);
 
 
   const logout = async () => {
@@ -101,8 +103,14 @@ const Sidebar: FC = () => {
               name: "Maps",
               type: "category",
               icon: { name: "map", type: "solid" },
-              views: mapRoutes,
+              views: mapRoutes("maps"),
             },
+            {
+              name: "Spreadsheets",
+              type: "category",
+              icon: { name: "table", type: "solid" },
+              views: mapRoutes("spreadsheets"),
+            }
           ]} />
         </Flex>
         <Button

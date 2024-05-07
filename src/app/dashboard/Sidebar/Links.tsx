@@ -1,5 +1,6 @@
 /*eslint-disable*/
 // chakra imports
+
 import {
   Accordion,
   AccordionButton,
@@ -60,7 +61,7 @@ const Links: FC<LinksProps> = ({ pieces }) => {
             return (
               <AccordionItem key={name + "_category" + views.map(v => v.path).join("_")}>
                 <AccordionButton>
-                  <Flex gap={2} color="white" justifyContent="space-between" grow={1}>
+                  <Flex gap={2} color="white" justifyContent="space-between" grow={1} alignItems="center">
                     <Text
                       fontWeight="bold"
                       textAlign="center"

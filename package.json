@@ -40,6 +40,8 @@
     "@mapbox/search-js-react": "^1.0.0-beta.18",
     "@prisma/client": "5.7.1",
     "@supabase/supabase-js": "^2.39.1",
+    "@syncfusion/ej2-react-spreadsheet": "^25.1.42",
+    "@tanstack/react-query": "^5.35.1",
     "classnames": "^2.3.2",
     "formik": "^2.4.5",
     "framer-motion": "^10.17.6",
