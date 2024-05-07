@@ -17,7 +17,8 @@
     "db:push": "dotenv -- cross-var bun supabase db push -p %SUPABASE_DB_PASSWORD%",
     "types:generate:server": "npx snaplet generate && bun ts-node ./scripts/createTsFromDB.ts",
     "types:generate:local": "npx snaplet generate && bun ts-node ./scripts/createTsFromDB.ts local",
-    "graphql:generate": "graphql-codegen"
+    "graphql:generate": "graphql-codegen",
+    "lt": "bunx localtunnel --subdomain billboards --port 3000"
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
