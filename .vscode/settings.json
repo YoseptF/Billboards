@@ -1,7 +1,4 @@
 {
-  "deno.enablePaths": [
-    "supabase/functions"
-  ],
   "deno.lint": true,
   "deno.unstable": true,
   "[typescript]": {
@@ -12,7 +9,6 @@
     "ceac",
     "Chakra",
     "snaplet",
-    "supabase",
     "tanstack",
     "Telecode"
   ]
