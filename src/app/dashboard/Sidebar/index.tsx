@@ -1,49 +1,36 @@
 "use client";
 
+import { BillboardsResponse, Collections } from "@/lib/pocketbase/pocketbase-types";
 import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Links, { Route } from "./Links";
 
 import Image from "next/image";
 import { Link } from "@chakra-ui/next-js";
-import supabase from "@/graphql/supabase";
+import { useAuthActions } from "@/lib/pocketbase/hooks";
 import { useRouter } from "next/navigation";
+import { useSubscribe } from "@/lib/pocketbase/hooks/useSubscribe";
 
 type RouteGetter = (initialPath: string) => Route[];
 
 const Sidebar: FC = () => {
   const { push } = useRouter();
-  const [mapRoutes, setMapRoutes] = useState<RouteGetter>(() => () => []);
+  const maps = useSubscribe<BillboardsResponse>({ id: Collections.Maps });
 
-  useEffect(() => {
-    const fetchLinks = async () => {
-      const { data } = await supabase.from("Map").select("id, name");
+  const mapRoutes: RouteGetter = (initialPath) => maps.map(({ id, name }) => ({
+    name,
+    path: `/dashboard/${initialPath}?id=${id}`,
+    type: "route",
+  }));
 
-      if (!data) throw new Error("Maps not found");
+  console.debug("mapRoutes", mapRoutes("maps"));
 
-      const routes: () => RouteGetter = () => (initialPath) => data.map(({ id, name }) => ({
-        path: `/dashboard/${initialPath}?id=${id}`,
-        name: `Map ${name}`,
-        type: "route",
-      }));
+  const { logout } = useAuthActions();
 
-      setMapRoutes(routes);
-    };
-
-    fetchLinks();
-  }, []);
-
-
-  const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error(error);
-      return;
-    }
+  const handleLogout = () => {
+    logout();
     push("/");
   };
-
-
 
   return (
 
@@ -114,7 +101,7 @@ const Sidebar: FC = () => {
           ]} />
         </Flex>
         <Button
-          onClick={logout}
+          onClick={handleLogout}
         >
           Logout
         </Button>

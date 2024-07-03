@@ -11,16 +11,13 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  List,
-  ListItem,
   Stack,
-  UnorderedList
 } from "@chakra-ui/react";
 import { FaLock, FaUserAlt } from "react-icons/fa";
 import { FC, useState } from "react";
 
 import { Link } from "@chakra-ui/next-js";
-import supabase from "@/graphql/supabase";
+import { useAuthActions } from "@/lib/pocketbase/hooks";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 
@@ -46,9 +43,16 @@ const getIsStrongPassword = (password: string) => {
   };
 };
 
+function isError (value: unknown): asserts value is Error {
+  if (!(value instanceof Error)) {
+    throw new Error("value is not an instance of Error");
+  }
+}
+
 const LoginForm: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { push } = useRouter();
+  const router = useRouter();
+  const { login } = useAuthActions();
 
   const handleShowClick = () => setShowPassword(!showPassword);
   const { errors, values, handleChange, handleSubmit } = useFormik({
@@ -57,17 +61,21 @@ const LoginForm: FC = () => {
       password: "",
     },
     onSubmit: async ({ email, password }, { setErrors }) => {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      try {
+        const { admin, token } = await login(
+          email,
+          password,
+        );
 
-      if (error) setErrors({ password: error.message });
+        console.debug({ admin, token });
 
-      if (data.session) {
-        push("/dashboard");
+        if(admin && token) {
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        isError(error);
+        setErrors({ password: error.message });
       }
-
     },
   });
 

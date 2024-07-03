@@ -1,3 +1,4 @@
+import "./polyfillIndexedDB";
 import "./globals.css";
 import "@fontsource/poppins";
 

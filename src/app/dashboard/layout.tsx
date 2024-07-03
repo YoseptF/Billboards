@@ -3,9 +3,8 @@
 import { FC, ReactNode, useLayoutEffect, useState } from "react";
 
 import { Box } from "@chakra-ui/react";
-import { Session } from "@supabase/supabase-js";
 import Sidebar from "./Sidebar";
-import supabase from "@/graphql/supabase";
+import { useAuth } from "@/lib/pocketbase/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 interface LayoutProps {
@@ -14,24 +13,13 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const { push } = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState<Session>();
 
-  useLayoutEffect(() => {
-    const checkAuth = async () => {
-
-      const { data } = await supabase.auth.getSession();
-      const { session } = data;
-      if (!session) {
-        push("/login");
-      } else {
-        setIsLoggedIn(session);
-      }
-    };
-
-    checkAuth();
-  });
+  const { isLoggedIn } = useAuth();
 
   if (!isLoggedIn) {
+    if (isLoggedIn !== undefined) {
+      push("/login");
+    }
     return null;
   }
 
