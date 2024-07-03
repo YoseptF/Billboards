@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pocketbase:dev": "./src/lib/pocketbase/pocketbase serve"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -36,6 +37,7 @@
     "lucide-react": "^0.400.0",
     "mapbox-gl": "^3.0.1",
     "next": "14.0.4",
+    "pocketbase": "^0.21.3",
     "point-in-polygon": "^1.1.0",
     "react": "^18",
     "react-dom": "^18",
