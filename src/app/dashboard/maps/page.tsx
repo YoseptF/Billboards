@@ -4,12 +4,17 @@ import "jsoneditor/dist/jsoneditor.min.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { Box, Flex } from "@chakra-ui/react";
+import { Collections, MapsRecord } from "@/lib/pocketbase/pocketbase-types";
 import { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from "react";
 import mapboxgl, { GeoJSONSourceOptions } from "mapbox-gl";
 
+import { checkEnv } from "@/utils";
+import { MapsResponse } from "@/lib/pocketbase/pocketbase-types";
+import { pbClient } from "@/lib/pocketbase";
 import Script from "next/script";
-import supabase from "@/graphql/supabase";
+import { updateRecord } from "@/lib/pocketbase/actions";
 import { useSearchParams } from "next/navigation";
+import { useSubscribeRecord } from "@/lib/pocketbase/hooks";
 
 type clusterOption = Pick<GeoJSONSourceOptions, "cluster" | "clusterMaxZoom" | "clusterMinPoints" | "clusterRadius" | "clusterProperties">;
 
@@ -22,7 +27,7 @@ const Maps: FC = () => {
   const isMapInitializedRef = useRef(isMapInitialized);
 
   const setIsMapInitialized: Dispatch<SetStateAction<boolean>> = (value) => {
-    if(value instanceof Function) {
+    if (value instanceof Function) {
       setIsMapInitializedInternal((oldValue) => {
         isMapInitializedRef.current = oldValue;
 
@@ -36,16 +41,17 @@ const Maps: FC = () => {
 
   const params = useSearchParams();
   const mapIdFromParams = params.get("id");
+  checkEnv(mapIdFromParams);
+  const map = useSubscribeRecord<MapsResponse>({ collectionName: Collections.Maps, id: mapIdFromParams });
 
   useEffect(() => {
     const setJsonFromId = async () => {
-      if (!mapIdFromParams) return;
+      if (!map) return;
 
-      const { data } = await supabase.from("Map").select("geoJson, name").eq("id", mapIdFromParams).single();
 
-      if (!data?.name) throw new Error("Map not found");
+      if (!map.name) throw new Error("Map not found");
 
-      const geoJson = data.geoJson as unknown as EnhancedGeoJSON;
+      const geoJson = map.geojson as unknown as EnhancedGeoJSON;
 
       const initializeMap = (event: MessageEvent) => {
         const { type, map } = event.data;
@@ -71,7 +77,7 @@ const Maps: FC = () => {
       do {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        if(!isMapInitializedRef.current) {
+        if (!isMapInitializedRef.current) {
           window.postMessage(
             {
               type: "setMap",
@@ -85,19 +91,18 @@ const Maps: FC = () => {
     };
 
     setJsonFromId();
-  }, [mapIdFromParams]);
+  }, [map]);
 
   useEffect(() => {
     const handleJsonUpdated = async (event: MessageEvent) => {
-      const { type, map } = event.data;
+      const { type, map: newMap } = event.data;
 
-      if (type !== "jsonUpdated" || !map || !mapIdFromParams) return;
+      if (type !== "jsonUpdated" || !newMap) return;
 
-      await supabase.from("Map").update({ geoJson: map }).eq("id", mapIdFromParams).select("*");
-
+      updateRecord<MapsRecord>(Collections.Maps, mapIdFromParams, { geojson: newMap });
     };
 
-    if(isMapInitialized) {
+    if (isMapInitialized) {
       window.addEventListener("message", handleJsonUpdated);
     }
 

@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { BaseSystemFields } from "../pocketbase-types";
 import { pbClient } from "../client";
-import { RecordModel } from "pocketbase";
 
 type Action = "update" | "create" | "delete";
 
@@ -35,21 +34,21 @@ const handleAction = <T extends BaseSystemFields<unknown>>(
   }
 };
 
-interface SubscribeArgs<T extends BaseSystemFields<unknown>> {
-  id: T["collectionName"],
+interface SubscribeCollectionArgs<T extends BaseSystemFields<unknown>> {
+  collectionName: T["collectionName"],
 }
 
-export const useSubscribe = <T extends BaseSystemFields<unknown>>({ id }: SubscribeArgs<T>) => {
+export const useGetCollection = <T extends BaseSystemFields<unknown>>({ collectionName }: SubscribeCollectionArgs<T>) => {
   const [value, setValue] = useState<T[]>([]);
 
   useEffect(() => {
     const getAndSubscribe = async () => {
       try {
-        const initialValue = await pbClient.collection(id).getFullList<T>();
+        const initialValue = await pbClient.collection(collectionName).getFullList<T>();
 
         setValue(initialValue);
 
-        pbClient.collection(id).subscribe<T>("*", (data) => {
+        pbClient.collection(collectionName).subscribe<T>("*", (data) => {
           isAction(data.action);
           handleAction(
             data.action,
@@ -65,9 +64,9 @@ export const useSubscribe = <T extends BaseSystemFields<unknown>>({ id }: Subscr
     getAndSubscribe();
 
     return () => {
-      pbClient.collection(id).unsubscribe("*");
+      pbClient.collection(collectionName).unsubscribe("*");
     };
-  }, [id]);
+  }, [collectionName]);
 
   return value;
 };

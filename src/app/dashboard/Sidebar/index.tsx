@@ -9,21 +9,19 @@ import Image from "next/image";
 import { Link } from "@chakra-ui/next-js";
 import { useAuthActions } from "@/lib/pocketbase/hooks";
 import { useRouter } from "next/navigation";
-import { useSubscribe } from "@/lib/pocketbase/hooks/useSubscribe";
+import { useSubscribeCollection } from "@/lib/pocketbase/hooks";
 
 type RouteGetter = (initialPath: string) => Route[];
 
 const Sidebar: FC = () => {
   const { push } = useRouter();
-  const maps = useSubscribe<BillboardsResponse>({ id: Collections.Maps });
+  const maps = useSubscribeCollection<BillboardsResponse>({ collectionName: Collections.Maps });
 
   const mapRoutes: RouteGetter = (initialPath) => maps.map(({ id, name }) => ({
     name,
     path: `/dashboard/${initialPath}?id=${id}`,
     type: "route",
   }));
-
-  console.debug("mapRoutes", mapRoutes("maps"));
 
   const { logout } = useAuthActions();
 

@@ -2,6 +2,7 @@
 
 import "./spreadsheet.css";
 
+import { Collections, MapsResponse } from "@/lib/pocketbase/pocketbase-types";
 import { FC, useRef } from "react";
 import {
   getCell,
@@ -13,11 +14,12 @@ import {
   SpreadsheetComponent
 } from "@syncfusion/ej2-react-spreadsheet";
 
+import { checkEnv } from "@/utils";
 import { Flex } from "@chakra-ui/react";
 import { registerLicense } from "@syncfusion/ej2-base";
-import supabase from "@/graphql/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import { useSubscribeRecord } from "@/lib/pocketbase/hooks";
 
 registerLicense("ORg4AjUWIQA/Gnt2UFhhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5WdkJjUHxdcHBTR2Jc");
 
@@ -32,29 +34,27 @@ interface Feature {
   }
 }
 
+function isGeoJSON(data: any): asserts data is { features: Feature[] } {
+  if (!("features" in data)) {
+    throw new Error("Invalid GeoJSON data");
+  }
+}
+
 const Spreadsheets: FC = () => {
 
   const params = useSearchParams();
+
   const mapIdFromParams = params.get("id");
-
-  const { data: mapData } = useQuery({
-    queryKey: ["map", mapIdFromParams],
-    queryFn: async ({ queryKey }) => {
-      const [, id] = queryKey;
-      const { data } = await supabase.from("Map").select("geoJson, name").eq("id", id!).single();
-
-      if (!data?.name) throw new Error("Map not found");
-
-      return (data.geoJson as unknown as { features: Feature[] }).features;
-    },
-    enabled: !!mapIdFromParams,
-  });
+  checkEnv(mapIdFromParams);
 
   const spreadsheetRef = useRef<SpreadsheetComponent>(null);
+  const mapData = useSubscribeRecord<MapsResponse>({ collectionName: Collections.Maps, id: mapIdFromParams });
 
   if (!mapData) return null;
 
-  const data = mapData.map(({ geometry: { coordinates }, properties: { id } }) => ({
+  isGeoJSON(mapData.geojson);
+
+  const data = mapData.geojson.features.map(({ geometry: { coordinates }, properties: { id } }) => ({
     A: id,
     B: coordinates[0],
     C: coordinates[1],
@@ -101,8 +101,6 @@ const Spreadsheets: FC = () => {
 
     const sheet = spreadsheet.getActiveSheet();
 
-    console.debug("sheet", sheet);
-
     if (!sheet.usedRange) return;
 
     const lastColumn = sheet.usedRange.colIndex;
@@ -110,22 +108,19 @@ const Spreadsheets: FC = () => {
 
     if (!lastColumn || !lastRow) return;
 
-    const activeColums = [];
+    const activeColumns = [];
     const column = getColumn(sheet, 1);
 
-    console.debug("column", column);
 
     for (let i = 0; i <= lastColumn; i++) {
       for (let j = 0; j <= lastRow; j++) {
         let cell = getCell(j, i, sheet);
-        console.debug("cell", cell);
         if (cell && cell.value) {
-          activeColums.push(`${JSON.stringify(cell)},${cell.value}`);
+          activeColumns.push(`${JSON.stringify(cell)},${cell.value}`);
           break;
         }
       }
     }
-    console.log("activeColums", activeColums);
   };
 
 
