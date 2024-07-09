@@ -61,7 +61,7 @@ const Spreadsheets: FC = () => {
   }));
 
 
-  const fileMenuItemSelect = (args) => {
+  const fileMenuItemSelect = (args: any) => {
     let spreadsheet = spreadsheetRef.current;
     if (args.item.text === "Microsoft Excel" && spreadsheet) {
       args.cancel = true;
