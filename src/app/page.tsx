@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 const BillboardMarketplace = () => {
   const [showFilters, setShowFilters] = useState(false);
-  const [hoveredBillboard, setHoveredBillboard] = useState(null);
+  const [hoveredBillboard, setHoveredBillboard] = useState<null | number>(null);
   const router = useRouter();
   const [filters, setFilters] = useState({
     state: "",
@@ -19,7 +19,17 @@ const BillboardMarketplace = () => {
     type: "",
   });
 
-  const billboards = [
+  type Billboard = {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    lat: number;
+    lng: number;
+    image: string;
+  };
+
+  const billboards: Billboard[] = [
     { id: 1, title: "Downtown Billboard", description: "Prime location", price: 500, lat: 19.432608, lng: -99.133208, image: "https://picsum.photos/300/200" },
     { id: 2, title: "Highway Billboard", description: "High visibility", price: 750, lat: 19.390519, lng: -99.305383, image: "https://picsum.photos/300/200" },
     { id: 3, title: "Mall Entrance Billboard", description: "Heavy foot traffic", price: 600, lat: 19.503565, lng: -99.203117, image: "https://picsum.photos/300/200" },
@@ -100,7 +110,7 @@ const BillboardMarketplace = () => {
     </div>
   );
 
-  const BillboardCard: FC<{ billboard: { image: string } }> = ({ billboard }) => {
+  const BillboardCard: FC<{ billboard: Billboard }> = ({ billboard }) => {
     const router = useRouter();
     return (
       <div
