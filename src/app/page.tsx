@@ -1,7 +1,7 @@
 "use client";
 
 import { Car, DollarSign, Filter, MapPin, Users, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 
 import Image from "next/image";
 import logo from "@/assets/logo.png";
@@ -100,7 +100,7 @@ const BillboardMarketplace = () => {
     </div>
   );
 
-  const BillboardCard = ({ billboard }) => {
+  const BillboardCard: FC<{ billboard: { image: string } }> = ({ billboard }) => {
     const router = useRouter();
     return (
       <div
