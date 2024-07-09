@@ -67,8 +67,6 @@ const LoginForm: FC = () => {
           password,
         );
 
-        console.debug({ admin, token });
-
         if(admin && token) {
           router.push("/dashboard");
         }

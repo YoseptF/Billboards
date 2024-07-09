@@ -18,5 +18,6 @@
     "semi": ["error", "always"],
     "arrow-parens": ["error", "always"],
     "object-shorthand": ["error", "always"]
-  }
+  },
+  "ignorePatterns": ["node_modules/", ".next/", "out/", "public/", "src/lib/pocketbase/"]
 }
