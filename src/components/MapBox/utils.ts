@@ -3,8 +3,8 @@
 import { Collections, MapsResponse } from "@/lib/pocketbase/pocketbase-types";
 import { mapsNames, MapType, saveMap } from "@/utils/indexedDB";
 
+import { getRecord } from "@/lib/pocketbase/actions";
 import { useEffect } from "react";
-import { useSubscribeRecord } from "@/lib/pocketbase/hooks";
 
 function isMap(data: any): asserts data is MapType {
   if (!("type" in data) || data.type !== "FeatureCollection") {
@@ -12,25 +12,11 @@ function isMap(data: any): asserts data is MapType {
   }
 }
 
-export const useLoadMapSource = async (mapName: mapsNames, mapboxMap: mapboxgl.Map, options?: { cluster?: boolean }) => {
-  const map = useSubscribeRecord<MapsResponse>({ collectionName: Collections.Maps, id: mapName });
-
-  useEffect(() => {
-    if (!map) {
-      // const { data, error } = await supabase.from("Map").select("*").eq("name", mapName);
-
-      // if (error || !data) throw new Error(error.message);
-
-      // const [statesFromDB] = data;
-
-      // map = statesFromDB.geoJson as unknown as MapType;
-
-      // saveMap(mapName, statesFromDB.geoJson as unknown as MapType);
-      return;
-    }
-
+export const useLoadMapSource = () => async (mapName: mapsNames, mapboxMap: mapboxgl.Map, options?: { cluster?: boolean }) => {
+  try {
+    const map = await getRecord<MapsResponse>(Collections.Maps, `name=${mapName}`);
     isMap(map.geojson);
-
+    saveMap(mapName, map.geojson as MapType);
     mapboxMap.addSource(mapName, {
       type: "geojson",
       data: map.geojson,
@@ -40,5 +26,8 @@ export const useLoadMapSource = async (mapName: mapsNames, mapboxMap: mapboxgl.M
         clusterRadius: 50
       })
     });
-  }, [map, mapName, mapboxMap, options]);
+  } catch {
+    // handle error
+  }
+
 };

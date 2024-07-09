@@ -3,6 +3,8 @@
 import { Car, DollarSign, Filter, MapPin, Users, X } from "lucide-react";
 import React, { useState } from "react";
 
+import Image from "next/image";
+import logo from "@/assets/logo.png";
 import MapBox from "@/components/MapBox";
 import { useRouter } from "next/navigation";
 
@@ -119,14 +121,14 @@ const BillboardMarketplace = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm sticky top-0 z-10">
+      <header className="bg-gray-100 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div
               className="text-2xl font-bold text-rose-600 cursor-pointer"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/landing")}
             >
-              Renta de espectaculares logo
+              <Image src={logo} alt="logo" width={150}></Image>
             </div>
             <div className="flex items-center space-x-4">
               <button

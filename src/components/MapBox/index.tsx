@@ -13,8 +13,8 @@ import { match, P } from "ts-pattern";
 import Filters from "./Filters";
 import { flattenNumberArrays } from "@/utils/geoJson";
 import { getMap } from "@/utils/indexedDB";
-import { loadMapSource } from "./utils";
 import mapboxgl from "mapbox-gl";
+import { useLoadMapSource } from "./utils";
 import { useSearchParams } from "next/navigation";
 
 const getMarker = (count: number) => {
@@ -100,6 +100,7 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_KEY!;
 const MapBox: FC = () => {
   const isMapInitialized = useRef(false);
   const [map, setMap] = useState<mapboxgl.Map>();
+  const loadMapSource = useLoadMapSource();
 
   const stateFromParams = useSearchParams().get("state");
 
